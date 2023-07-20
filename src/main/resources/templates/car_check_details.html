@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div layout:fragment="content">
+        <input type="hidden" id="dealId">
+        <div class="row">
+            <div class="container col-10">
+                <div id="cardBody">
+                </div>
+            </div>
+            <div class="container col-10">
+                <button type="button" class="btn btn-danger" onclick="deleteDeal()">Delete</button>
+                <button type="button" class="btn btn-success ms-2" onclick="approveDeal()">Approve</button>
+            </div>
+        </div>
+
+
+
+        <script type="text/javascript">
+            let currentUrl = window.location.href;
+            let urlParts = currentUrl.split('/');
+            let id = urlParts[urlParts.length - 1];
+            let cityName;
+            let carBrandName;
+            let bodyStyle;
+            let driveTrain;
+            let transmission;
+            let isKazakh;
+            let dateOfPost;
+            let carModel;
+            let yearOfManufacturer;
+            let color;
+            let price;
+            let volume;
+            let mileage;
+            let description;
+            let isActive;
+            let carId;
+            let phone;
+
+
+            loadDeal(id);
+            function loadDeal(id){
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/deals/" + id, true);
+                httpRequest.onreadystatechange = function (){
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+
+                        let deal = JSON.parse(httpRequest.responseText);
+
+                        let cardContent = "";
+                        carBrandName = deal.carDTO.carBrand.name;
+                        dateOfPost = new Date(deal.currentDate);
+                        let formattedDate = dateOfPost.getDate() + ' ' + getMonthName(dateOfPost.getMonth()) + ' ' + dateOfPost.getFullYear();
+                        carModel = deal.carDTO.model;
+                        yearOfManufacturer = deal.carDTO.yearOfManufacturer;
+                        color = deal.carDTO.color;
+                        price = deal.carDTO.price;
+                        volume = deal.carDTO.volume;
+                        cityName = deal.carDTO.city.name;
+                        isKazakh = deal.carDTO.isKazakh;
+                        bodyStyle = deal.carDTO.bodyStyle.style;
+                        driveTrain = deal.carDTO.driveTrain.name;
+                        transmission = deal.carDTO.typeOfTransmission.type;
+                        mileage = deal.carDTO.mileage;
+                        description = deal.carDTO.description;
+                        isActive = deal.isActive;
+                        carId = deal.carDTO.id;
+                        phone = deal.phoneNumber;
+
+                        let clearance = ""
+                        if (isKazakh){
+                            clearance = "Yes"
+                        } else {
+                            clearance = "No"
+                        }
+
+
+                        cardContent += '<div class="card mb-3">';
+                        cardContent += '<h5 class="card-header">' + carBrandName + ' ' + carModel + '</h5>';
+                        cardContent += '<div class="card-body">';
+                        cardContent += '<h5 class="card-title">Color: ' + color + '</h5>';
+                        cardContent += '<p class="card-text">Year: ' + yearOfManufacturer + '</p>';
+                        cardContent += '<p class="card-text">Volume: ' + volume + '</p>';
+                        cardContent += '<p class="card-text">City: ' + cityName + '</p>';
+                        cardContent += '<p class="card-text">Customs clearance in kazakhstan: ' + clearance + '</p>';
+                        cardContent += '<p class="card-text">Body Style: ' + bodyStyle + '</p>';
+                        cardContent += '<p class="card-text">Drive Train: ' + driveTrain + '</p>';
+                        cardContent += '<p class="card-text">Transmission: ' + transmission + '</p>';
+                        cardContent += '<p class="card-text">Mileage: ' + mileage + '</p>';
+                        cardContent += '<p class="card-text">Price: ' + price + '</p>';
+                        cardContent += '<p class="card-text">Description: ' + description + '</p>';
+                        cardContent += '<p class="card-text">Phone number: ' + phone + '</p>';
+                        cardContent += '<p class="card-text">Date of Post: ' + formattedDate + '</p>';
+                        cardContent += '</div>';
+                        cardContent += '</div>';
+
+
+                        document.getElementById("cardBody").innerHTML = cardContent;
+
+                    }
+                }
+                httpRequest.send();
+            }
+            function getMonthName(monthIndex) {
+                const months = [
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                return months[monthIndex];
+            }
+
+
+            function deleteDeal(){
+                let approve = confirm("Are you sure?");
+
+                if (approve){
+                    const httpRequest = new XMLHttpRequest;
+                    httpRequest.open("DELETE", "/deals/"+id, true);
+                    httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+                    httpRequest.onreadystatechange = function (){
+                        if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                            window.location.href = "/check-deal";
+                        }
+                    };
+                    httpRequest.send();
+                }
+            }
+
+            function approveDeal(){
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("PUT", "/deals/update-active", true);
+                httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+
+                let dealId = id;
+
+                let dealData = {
+                    id: dealId,
+                    isActive: true
+                };
+
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                        window.location.href = "/check-deal";
+                    }
+                };
+
+                httpRequest.send(JSON.stringify(dealData));
+            }
+
+
+        </script>
+
+        <section style="background-color: #eee;" sec:authorize="isAuthenticated()">
+            <div class="container my-5 py-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-12 col-lg-10 col-xl-8">
+                        <div class="card">
+                            <div id="cardBodyComment">
+                            </div>
+
+                            <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                                <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                        <textarea class="form-control" id="textAreaExample" rows="4"
+                                                        style="background: #fff;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="addComment()">Post comment</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script type="text/javascript">
+            if (isActive){
+                loadComments(id);
+
+
+                function loadComments(id){
+                    const httpRequest = new XMLHttpRequest;
+                    httpRequest.open("GET", "/comments/"+id, true);
+                    httpRequest.onreadystatechange = function (){
+                        if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+
+                            let comments = JSON.parse(httpRequest.responseText);
+
+                            let cardContent = "";
+
+                            for (let i = 0; i < comments.length; i++) {
+                                let comment = comments[i];
+                                let content = comment.content;
+                                let createdAt = new Date(comment.createdAt);
+                                let formattedDate = createdAt.getDate() + ' ' + getMonthName(createdAt.getMonth()) + ' ' + createdAt.getFullYear();
+                                let userFullName = comment.userFullName;
+
+
+                                cardContent += '<div class="card-body">';
+                                cardContent += '<div class="d-flex flex-start align-items-center">';
+                                cardContent += '<div>';
+                                cardContent += '<h6 class="fw-bold text-primary mb-1">' + userFullName + '</h6>';
+                                cardContent += '<p class="text-muted small mb-0">' + formattedDate + '</p>';
+                                cardContent += '</div>';
+                                cardContent += '</div>';
+                                cardContent += '<p class="mt-3 mb-4 pb-2">' + content + '</p>';
+                                cardContent += '<div>';
+                                cardContent += '<a href="#!" class="d-flex align-items-center me-3">';
+                                cardContent += "<button class='mb-0 btn-danger' onclick='deleteComment("+comment.id+")'>Delete</button>";
+                                cardContent += '</a>';
+                                cardContent += '</div>';
+                                cardContent += '</div>';
+                            }
+                            document.getElementById("cardBodyComment").innerHTML = cardContent;
+                        }
+                    }
+                    httpRequest.send();
+
+                }
+
+                function addComment(){
+                    let comment = document.getElementById("textAreaExample").value;
+                    if (comment != null){
+                        const httpRequest = new XMLHttpRequest();
+                        httpRequest.open("POST", "/comments", true);
+                        httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+
+                        let commentData = {
+                            content: comment,
+                            dealId: id
+                        };
+
+                        httpRequest.onreadystatechange = function () {
+                            if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                                loadComments(id);
+                                document.getElementById("textAreaExample").value = "";
+                            }
+                        };
+                        httpRequest.send(JSON.stringify(commentData));
+                    }
+
+                }
+
+                function deleteComment(commentId){
+                    let approve = confirm("Are you sure?");
+
+                    if (approve){
+                        const httpRequest = new XMLHttpRequest;
+                        httpRequest.open("DELETE", "/comments/"+commentId, true);
+                        httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+                        httpRequest.onreadystatechange = function (){
+                            if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                                loadComments(id);
+                            }
+                        };
+                        httpRequest.send();
+                    }
+                }
+            }
+        </script>
+    </div>
+
+
+
+</html>

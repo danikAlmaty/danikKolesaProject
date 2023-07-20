@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div layout:fragment="content">
+        <input type="hidden" id="dealId">
+        <div class="row">
+            <div class="container col-10">
+                <div class="row">
+                    <div class="col-12">
+                        <label>Car Brand</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-control" id="brandSelect">
+                            <option th:each="brand: ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Model</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" class="form-control" id="modelUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Color</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" class="form-control" id="colorUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Volume</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="number" class="form-control" id="volumeUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>City</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-control" id="citySelect">
+                            <option th:each="city: ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Year</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="number" class="form-control" id="yearUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Price</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="number" class="form-control" id="priceUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Is Kazakh?</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-control" id="isKazakhId">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Body Style</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-control" id="bodySelect">
+                            <option th:each="body: ${bodies}" th:value="${body.id}" th:text="${body.style}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Drive Train</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-control" id="driveTrainSelect">
+                            <option th:each="train: ${trains}" th:value="${train.id}" th:text="${train.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Transmission</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-control" id="transmissionSelect">
+                            <option th:each="transmission: ${transmissions}" th:value="${transmission.id}" th:text="${transmission.type}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Description</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <textarea class="form-control" id="descriptionUpdateId" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Mileage</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="number" class="form-control" id="mileageUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Phone Number</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" class="form-control" id="phoneUpdateId">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary" onclick="addDeal()">Add Deal</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script type="text/javascript" defer>
+
+            loadCities();
+            loadCarBrands();
+            loadBodyStyles();
+            loadDriveTrain();
+            loadTransmissions();
+            function addDeal() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("POST", "/deals", true);
+                httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+
+                let carBrand = document.getElementById("brandSelect").value;
+                let model = document.getElementById("modelUpdateId").value;
+                let color = document.getElementById("colorUpdateId").value;
+                let volume = document.getElementById("volumeUpdateId").value;
+                let city = document.getElementById("citySelect").value;
+                let year = document.getElementById("yearUpdateId").value;
+                let price = document.getElementById("priceUpdateId").value;
+                let isKazakhString = document.getElementById("isKazakhId").value;
+                let isKazakh = (isKazakhString === "true");
+                let bodyStyle = document.getElementById("bodySelect").value;
+                let driveTrain = document.getElementById("driveTrainSelect").value;
+                let transmission = document.getElementById("transmissionSelect").value;
+                let description = document.getElementById("descriptionUpdateId").value;
+                let mileage = document.getElementById("mileageUpdateId").value;
+                let phone = document.getElementById("phoneUpdateId").value;
+
+                let dealData = {
+                    currentDate: null,
+                    phoneNumber: phone,
+                    isActive: true,
+                    carDTO: {
+                        carBrand: {
+                            id: carBrand
+                        },
+                        model: model,
+                        color: color,
+                        volume: volume,
+                        city: {
+                            id: city
+                        },
+                        yearOfManufacturer: year,
+                        price: price,
+                        isKazakh: isKazakh,
+                        bodyStyle: {
+                            id: bodyStyle
+                        },
+                        driveTrain: {
+                            id: driveTrain
+                        },
+                        typeOfTransmission: {
+                            id: transmission
+                        },
+                        description: description,
+                        mileage: mileage
+                    }
+                };
+
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                        window.location.href = "/";
+                    }
+                };
+                httpRequest.send(JSON.stringify(dealData));
+            }
+
+
+            function loadCities() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/city", true);
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        const cities = JSON.parse(httpRequest.responseText);
+                        const selectElement = document.getElementById("citySelect");
+
+
+                        cities.forEach(function(city) {
+                            const optionElement = document.createElement("option");
+                            optionElement.value = city.id;
+                            optionElement.textContent = city.name;
+                            selectElement.appendChild(optionElement);
+
+                        });
+                    }
+                };
+                httpRequest.send();
+            }
+            function loadCarBrands() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/car-brands", true);
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        const brands = JSON.parse(httpRequest.responseText);
+                        const selectElement = document.getElementById("brandSelect");
+
+
+                        brands.forEach(function(brand) {
+                            const optionElement = document.createElement("option");
+                            optionElement.value = brand.id;
+                            optionElement.textContent = brand.name;
+                            selectElement.appendChild(optionElement);
+                        });
+                    }
+                };
+                httpRequest.send();
+            }
+
+            function loadBodyStyles() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/body-style", true);
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        const bodies = JSON.parse(httpRequest.responseText);
+                        const selectElement = document.getElementById("bodySelect");
+
+
+                        bodies.forEach(function(body) {
+                            const optionElement = document.createElement("option");
+                            optionElement.value = body.id;
+                            optionElement.textContent = body.style;
+                            selectElement.appendChild(optionElement);
+
+                        });
+                    }
+                };
+                httpRequest.send();
+            }
+            function loadDriveTrain() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/drive-train", true);
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        const trains = JSON.parse(httpRequest.responseText);
+                        const selectElement = document.getElementById("driveTrainSelect");
+
+
+                        trains.forEach(function(train) {
+                            const optionElement = document.createElement("option");
+                            optionElement.value = train.id;
+                            optionElement.textContent = train.name;
+                            selectElement.appendChild(optionElement);
+
+                        });
+                    }
+                };
+                httpRequest.send();
+            }
+
+            function loadTransmissions() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/transmission", true);
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        const transmissions = JSON.parse(httpRequest.responseText);
+                        const selectElement = document.getElementById("transmissionSelect");
+
+                        transmissions.forEach(function(transmission) {
+                            const optionElement = document.createElement("option");
+                            optionElement.value = transmission.id;
+                            optionElement.textContent = transmission.type;
+                            selectElement.appendChild(optionElement);
+
+                        });
+                    }
+                };
+                httpRequest.send();
+            }
+
+        </script>
+    </div>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div layout:fragment="content">
+        <h1 class="text-center">Transmissions</h1>
+        <div class="row">
+            <div class="container col-10">
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Transmission Name</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" class="form-control" id="transmissionId">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary" onclick="addTransmission()">Add New Transmission</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row mt-3 mb-3">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="detailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Transmission Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label>NAME</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="transmissionDetailsId">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="updateTransmission()">SAVE</button>
+                    </div>
+
+                    <script type="text/javascript" defer>
+                        function updateTransmission(){
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("PUT", "/transmission", true);
+                            httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+                            let id = transmissionId;
+                            let nameTransmission = document.getElementById("transmissionDetailsId").value;
+
+
+                            httpRequest.onreadystatechange = function (){
+                                if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                                    detailsModal.hide();
+                                    loadTransmissions();
+                                }
+                            };
+
+                            let body = {
+                                id: id,
+                                type: nameTransmission
+                            };
+
+                            body = JSON.stringify(body);
+                            httpRequest.send(body);
+
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" defer>
+
+            loadTransmissions();
+
+            let transmissionId;
+            function addTransmission() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("POST", "/transmission", true);
+                httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+
+                let transmission = document.getElementById("transmissionId").value;
+
+
+                let transmissionData = {
+                    type: transmission
+                };
+
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                        window.location.href = "/add-transmission";
+                    }
+                };
+                httpRequest.send(JSON.stringify(transmissionData));
+            }
+
+            function loadTransmissions() {
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/transmission", true);
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        const transmissions = JSON.parse(httpRequest.responseText);
+
+                        let tableContent = "";
+
+                        for (let i = 0; i < transmissions.length; i++){
+                            tableContent+="<tr>";
+                            tableContent+="<td>"+transmissions[i].id+"</td>";
+                            tableContent+="<td>"+transmissions[i].type+"</td>";
+                            tableContent+="<td><button class='btn btn-primary btn-sm' onclick='openCourseDetailsModal("+transmissions[i].id+")'>DETAILS</button></td>";
+                            tableContent+="</tr>";
+                        }
+                        document.getElementById("tableBody").innerHTML = tableContent;
+                    }
+                };
+                httpRequest.send();
+            }
+
+            function openCourseDetailsModal(id){
+
+                detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+
+
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/transmission/"+id, true);
+                httpRequest.onreadystatechange = function (){
+
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                        let result = JSON.parse(httpRequest.responseText);
+
+                        document.getElementById("transmissionDetailsId").value = result.type;
+                        transmissionId = result.id;
+
+                        detailsModal.show();
+                    }
+
+                }
+                httpRequest.send();
+
+            }
+        </script>
+    </div>
+</html>

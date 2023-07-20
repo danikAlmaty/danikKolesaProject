@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div layout:fragment="content">
+        <input type="hidden" id="dealId">
+        <input type="hidden" id="currentUserId" sec:authorize="isAuthenticated()" th:value="${#authentication.principal.id}">
+        <div class="row">
+            <div class="container col-10">
+                <div id="cardBody">
+                </div>
+            </div>
+            <div id="buttonsId">
+
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+
+            function authorButtons(currentUserId, dealUserId) {
+
+                let buttonsDiv = document.createElement("div");
+                buttonsDiv.className = "container col-10";
+
+                if (currentUserId == dealUserId) {
+                    buttonsDiv.innerHTML = `
+            <button type="button" class="btn btn-danger" onclick="deleteDeal()">Delete</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Edit
+            </button>
+        `;
+                }
+
+                let insertionPoint = document.getElementById("buttonsId");
+                if (insertionPoint) {
+                    while (insertionPoint.firstChild) {
+                        insertionPoint.removeChild(insertionPoint.firstChild);
+                    }
+
+                    insertionPoint.appendChild(buttonsDiv);
+                }
+            }
+        </script>
+
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Editing Deal</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label>Car Brand</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select class="form-control" id="brandSelect">
+                                    <option th:each="brand: ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Model</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="modelUpdateId">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Color</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="colorUpdateId">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Volume</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="number" class="form-control" id="volumeUpdateId">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>City</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select class="form-control" id="citySelect">
+                                    <option th:each="city: ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Year</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="number" class="form-control" id="yearUpdateId">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Price</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="number" class="form-control" id="priceUpdateId">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Is Kazakh</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select class="form-control" id="isKazakhId">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Body Style</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select class="form-control" id="bodySelect">
+                                    <option th:each="body: ${bodies}" th:value="${body.id}" th:text="${body.style}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Drive Train</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select class="form-control" id="driveTrainSelect">
+                                    <option th:each="train: ${trains}" th:value="${train.id}" th:text="${train.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Transmission</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select class="form-control" id="transmissionSelect">
+                                    <option th:each="transmission: ${transmissions}" th:value="${transmission.id}" th:text="${transmission.type}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Description</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <textarea class="form-control" id="descriptionUpdateId" rows="10"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Mileage</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="number" class="form-control" id="mileageUpdateId">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Phone Number</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="phoneUpdateId">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="updateDeal()">Change</button>
+                    </div>
+
+                    <script type="text/javascript" defer>
+
+                        function updateDeal() {
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("PUT", "/deals", true);
+                            httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+
+                            let dealId = id;
+                            let carBrand = document.getElementById("brandSelect").value;
+                            let model = document.getElementById("modelUpdateId").value;
+                            let color = document.getElementById("colorUpdateId").value;
+                            let volume = document.getElementById("volumeUpdateId").value;
+                            let city = document.getElementById("citySelect").value;
+                            let year = document.getElementById("yearUpdateId").value;
+                            let price = document.getElementById("priceUpdateId").value;
+                            let isKazakhString = document.getElementById("isKazakhId").value;
+                            let isKazakh = (isKazakhString === "true");
+                            let bodyStyle = document.getElementById("bodySelect").value;
+                            let driveTrain = document.getElementById("driveTrainSelect").value;
+                            let transmission = document.getElementById("transmissionSelect").value;
+                            let description = document.getElementById("descriptionUpdateId").value;
+                            let mileage = document.getElementById("mileageUpdateId").value;
+                            let phone = document.getElementById("phoneUpdateId").value;
+
+                            let dealData = {
+                                id: dealId,
+                                currentDate: dateOfPost,
+                                isActive: true,
+                                phoneNumber: phone,
+                                carDTO: {
+                                    id: carId,
+                                    carBrand: {
+                                        id: carBrand
+                                    },
+                                    model: model,
+                                    color: color,
+                                    volume: volume,
+                                    city: {
+                                        id: city
+                                    },
+                                    yearOfManufacturer: year,
+                                    price: price,
+                                    isKazakh: isKazakh,
+                                    bodyStyle: {
+                                        id: bodyStyle
+                                    },
+                                    driveTrain: {
+                                        id: driveTrain
+                                    },
+                                    typeOfTransmission: {
+                                        id: transmission
+                                    },
+                                    description: description,
+                                    mileage: mileage
+                                }
+                            };
+
+                            httpRequest.onreadystatechange = function () {
+                                if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                                    window.location.href = "/car-details/"+id;
+                                    hideModal();
+                                }
+                            };
+
+                            httpRequest.send(JSON.stringify(dealData));
+                        }
+
+                        function hideModal() {
+                            var modal = document.getElementById("staticBackdrop");
+                            var backdrop = document.querySelector(".modal-backdrop");
+
+                            modal.classList.remove("show");
+                            backdrop.classList.remove("show");
+
+                            modal.setAttribute("aria-hidden", "true");
+                            backdrop.setAttribute("aria-hidden", "true");
+
+                            modal.style.display = "none";
+                            backdrop.style.display = "none";
+                        }
+
+
+
+
+
+
+
+
+
+                        function loadCities() {
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("GET", "/city", true);
+                            httpRequest.onreadystatechange = function() {
+                                if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                                    const cities = JSON.parse(httpRequest.responseText);
+                                    const selectElement = document.getElementById("citySelect");
+
+
+                                    cities.forEach(function(city) {
+                                        const optionElement = document.createElement("option");
+                                        optionElement.value = city.id;
+                                        optionElement.textContent = city.name;
+                                        selectElement.appendChild(optionElement);
+
+
+
+                                        if (city.name === cityName) {
+                                            optionElement.selected = true;
+                                        }
+                                    });
+                                }
+                            };
+                            httpRequest.send();
+                        }
+                        function loadCarBrands() {
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("GET", "/car-brands", true);
+                            httpRequest.onreadystatechange = function() {
+                                if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                                    const brands = JSON.parse(httpRequest.responseText);
+                                    const selectElement = document.getElementById("brandSelect");
+
+
+                                    brands.forEach(function(brand) {
+                                        const optionElement = document.createElement("option");
+                                        optionElement.value = brand.id;
+                                        optionElement.textContent = brand.name;
+                                        selectElement.appendChild(optionElement);
+
+
+
+                                        if (brand.name === carBrandName) {
+                                            optionElement.selected = true;
+                                        }
+                                    });
+                                }
+                            };
+                            httpRequest.send();
+                        }
+
+                        function loadBodyStyles() {
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("GET", "/body-style", true);
+                            httpRequest.onreadystatechange = function() {
+                                if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                                    const bodies = JSON.parse(httpRequest.responseText);
+                                    const selectElement = document.getElementById("bodySelect");
+
+
+                                    bodies.forEach(function(body) {
+                                        const optionElement = document.createElement("option");
+                                        optionElement.value = body.id;
+                                        optionElement.textContent = body.style;
+                                        selectElement.appendChild(optionElement);
+
+
+
+                                        if (body.name === bodyStyle) {
+                                            optionElement.selected = true;
+                                        }
+                                    });
+                                }
+                            };
+                            httpRequest.send();
+                        }
+                        function loadDriveTrain() {
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("GET", "/drive-train", true);
+                            httpRequest.onreadystatechange = function() {
+                                if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                                    const trains = JSON.parse(httpRequest.responseText);
+                                    const selectElement = document.getElementById("driveTrainSelect");
+
+
+                                    trains.forEach(function(train) {
+                                        const optionElement = document.createElement("option");
+                                        optionElement.value = train.id;
+                                        optionElement.textContent = train.name;
+                                        selectElement.appendChild(optionElement);
+
+
+
+                                        if (train.name === driveTrain) {
+                                            optionElement.selected = true;
+                                        }
+                                    });
+                                }
+                            };
+                            httpRequest.send();
+                        }
+
+                        function loadTransmissions() {
+                            const httpRequest = new XMLHttpRequest();
+                            httpRequest.open("GET", "/transmission", true);
+                            httpRequest.onreadystatechange = function() {
+                                if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                                    const transmissions = JSON.parse(httpRequest.responseText);
+                                    const selectElement = document.getElementById("transmissionSelect");
+
+
+                                    transmissions.forEach(function(transmission) {
+                                        const optionElement = document.createElement("option");
+                                        optionElement.value = transmission.id;
+                                        optionElement.textContent = transmission.type;
+                                        selectElement.appendChild(optionElement);
+
+
+
+                                        if (transmission.name === transmission) {
+                                            optionElement.selected = true;
+                                        }
+                                    });
+                                }
+                            };
+                            httpRequest.send();
+                        }
+
+                        function setIsKazakh(){
+                            const selectElement = document.getElementById("isKazakhId");
+
+                            const optionElement = document.createElement("option")
+                            optionElement.value = "true";
+                            optionElement.textContent = "Yes"
+                            selectElement.appendChild(optionElement);
+
+                            const optionElement1 = document.createElement("option")
+                            optionElement1.value = "false";
+                            optionElement1.textContent = "No"
+                            selectElement.appendChild(optionElement1);
+
+                            if (isKazakh){
+                                optionElement.selected = true;
+                            } else {
+                                optionElement1.selected = true;
+                            }
+
+                        }
+
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            let currentUrl = window.location.href;
+            let urlParts = currentUrl.split('/');
+            let id = urlParts[urlParts.length - 1];
+            let cityName;
+            let carBrandName;
+            let bodyStyle;
+            let driveTrain;
+            let transmission;
+            let isKazakh;
+            let dateOfPost;
+            let carModel;
+            let yearOfManufacturer;
+            let color;
+            let price;
+            let volume;
+            let mileage;
+            let description;
+            let isActive;
+            let carId;
+            let phone;
+            let dealUserId;
+
+
+            loadDeal(id);
+            function loadDeal(id){
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/deals/" + id, true);
+                httpRequest.onreadystatechange = function (){
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+
+                        let deal = JSON.parse(httpRequest.responseText);
+
+                        let cardContent = "";
+                        carBrandName = deal.carDTO.carBrand.name;
+                        dateOfPost = new Date(deal.currentDate);
+                        let formattedDate = dateOfPost.getDate() + ' ' + getMonthName(dateOfPost.getMonth()) + ' ' + dateOfPost.getFullYear();
+                        carModel = deal.carDTO.model;
+                        yearOfManufacturer = deal.carDTO.yearOfManufacturer;
+                        color = deal.carDTO.color;
+                        price = deal.carDTO.price;
+                        volume = deal.carDTO.volume;
+                        cityName = deal.carDTO.city.name;
+                        isKazakh = deal.carDTO.isKazakh;
+                        bodyStyle = deal.carDTO.bodyStyle.style;
+                        driveTrain = deal.carDTO.driveTrain.name;
+                        transmission = deal.carDTO.typeOfTransmission.type;
+                        mileage = deal.carDTO.mileage;
+                        description = deal.carDTO.description;
+                        isActive = deal.isActive;
+                        carId = deal.carDTO.id;
+                        phone = deal.phoneNumber;
+                        dealUserId = deal.dealUserId;
+
+                        if (currentUserId != null){
+                            authorButtons(currentUserId, dealUserId);
+                        }
+
+                        let clearance = ""
+                        if (isKazakh){
+                            clearance = "Yes"
+                        } else {
+                            clearance = "No"
+                        }
+
+
+                        cardContent += '<div class="card mb-3">';
+                        cardContent += '<h5 class="card-header">' + carBrandName + ' ' + carModel + '</h5>';
+                        cardContent += '<div class="card-body">';
+                        cardContent += '<h5 class="card-title">Color: ' + color + '</h5>';
+                        cardContent += '<p class="card-text">Year: ' + yearOfManufacturer + '</p>';
+                        cardContent += '<p class="card-text">Volume: ' + volume + '</p>';
+                        cardContent += '<p class="card-text">City: ' + cityName + '</p>';
+                        cardContent += '<p class="card-text">Customs clearance in kazakhstan: ' + clearance + '</p>';
+                        cardContent += '<p class="card-text">Body Style: ' + bodyStyle + '</p>';
+                        cardContent += '<p class="card-text">Drive Train: ' + driveTrain + '</p>';
+                        cardContent += '<p class="card-text">Transmission: ' + transmission + '</p>';
+                        cardContent += '<p class="card-text">Mileage: ' + mileage + '</p>';
+                        cardContent += '<p class="card-text">Price: ' + price + '</p>';
+                        cardContent += '<p class="card-text">Description: ' + description + '</p>';
+                        cardContent += '<p class="card-text">Phone number: ' + phone + '</p>';
+                        cardContent += '<p class="card-text">Date of Post: ' + formattedDate + '</p>';
+                        cardContent += '</div>';
+                        cardContent += '</div>';
+
+                        document.getElementById("modelUpdateId").value = carModel;
+                        document.getElementById("yearUpdateId").value = yearOfManufacturer;
+                        document.getElementById("colorUpdateId").value = color;
+                        document.getElementById("priceUpdateId").value = price;
+                        document.getElementById("volumeUpdateId").value = volume;
+                        document.getElementById("mileageUpdateId").value = mileage;
+                        document.getElementById("descriptionUpdateId").value = description;
+                        document.getElementById("phoneUpdateId").value = phone;
+                        document.getElementById("cardBody").innerHTML = cardContent;
+
+                        loadCities();
+                        loadCarBrands();
+                        loadBodyStyles();
+                        loadDriveTrain();
+                        loadTransmissions();
+                        setIsKazakh();
+                    }
+                }
+                httpRequest.send();
+            }
+            function getMonthName(monthIndex) {
+                const months = [
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                return months[monthIndex];
+            }
+
+
+            function deleteDeal(){
+                let approve = confirm("Are you sure?");
+
+                if (approve){
+                    const httpRequest = new XMLHttpRequest;
+                    httpRequest.open("DELETE", "/deals/"+id, true);
+                    httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+                    httpRequest.onreadystatechange = function (){
+                        if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                            window.location.href = "/";
+                        }
+                    };
+                    httpRequest.send();
+                }
+            }
+
+
+        </script>
+
+        <section style="background-color: #eee;" sec:authorize="isAuthenticated()">
+            <div class="container my-5 py-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-12 col-lg-10 col-xl-8">
+                        <div class="card">
+                            <div id="cardBodyComment">
+                            </div>
+
+                            <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                                <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                        <textarea class="form-control" id="textAreaExample" rows="4"
+                                                        style="background: #fff;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="addComment()">Post comment</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script type="text/javascript">
+
+                let currentUserId;
+                if (document.getElementById("currentUserId").value != null){
+                    currentUserId = document.getElementById("currentUserId").value;
+                    loadComments(id, currentUserId);
+                }
+
+
+
+
+                function loadComments(id, currentUserId){
+                    if (currentUserId!=null){
+                        const httpRequest = new XMLHttpRequest;
+                        httpRequest.open("GET", "/comments/"+id, true);
+                        httpRequest.onreadystatechange = function (){
+                            if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+
+                                let comments = JSON.parse(httpRequest.responseText);
+
+                                let cardContent = "";
+
+                                for (let i = 0; i < comments.length; i++) {
+                                    let comment = comments[i];
+                                    let userId = comment.userId;
+                                    let content = comment.content;
+                                    let createdAt = new Date(comment.createdAt);
+                                    let formattedDate = createdAt.getDate() + ' ' + getMonthName(createdAt.getMonth()) + ' ' + createdAt.getFullYear();
+                                    let userFullName = comment.userFullName;
+
+                                    let deleteButton = '';
+                                    if (currentUserId == userId) {
+                                        deleteButton = "<button class='mb-0 btn-danger' onclick='deleteComment(" + comment.id + ")'>Delete</button>";
+                                    }
+
+
+                                    cardContent += '<div class="card-body">';
+                                    cardContent += '<div class="d-flex flex-start align-items-center">';
+                                    cardContent += '<div>';
+                                    cardContent += '<h6 class="fw-bold text-primary mb-1">' + userFullName + '</h6>';
+                                    cardContent += '<p class="text-muted small mb-0">' + formattedDate + '</p>';
+                                    cardContent += '</div>';
+                                    cardContent += '</div>';
+                                    cardContent += '<p class="mt-3 mb-4 pb-2">' + content + '</p>';
+                                    cardContent += '<div>';
+                                    cardContent += '<a href="#!" class="d-flex align-items-center me-3">';
+                                    cardContent += deleteButton;
+                                    cardContent += '</a>';
+                                    cardContent += '</div>';
+                                    cardContent += '</div>';
+                                }
+                                document.getElementById("cardBodyComment").innerHTML = cardContent;
+                            }
+                        }
+                        httpRequest.send();
+
+                    }
+
+                }
+                function addComment(){
+                    let comment = document.getElementById("textAreaExample").value;
+                    if (comment != null){
+                        const httpRequest = new XMLHttpRequest();
+                        httpRequest.open("POST", "/comments", true);
+                        httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+
+                        let commentData = {
+                            content: comment,
+                            dealId: id
+                        };
+
+                        httpRequest.onreadystatechange = function () {
+                            if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                                loadComments(id, currentUserId);
+                                document.getElementById("textAreaExample").value = "";
+                            }
+                        };
+                        httpRequest.send(JSON.stringify(commentData));
+                    }
+
+                }
+
+                function deleteComment(commentId){
+                    let approve = confirm("Are you sure?");
+
+                    if (approve){
+                        const httpRequest = new XMLHttpRequest;
+                        httpRequest.open("DELETE", "/comments/"+commentId, true);
+                        httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+                        httpRequest.onreadystatechange = function (){
+                            if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                                loadComments(id, currentUserId);
+                            }
+                        };
+                        httpRequest.send();
+                    }
+
+                }
+
+        </script>
+    </div>
+
+
+
+</html>

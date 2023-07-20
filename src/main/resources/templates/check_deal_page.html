@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div layout:fragment="content">
+        <div class="row">
+            <div class="container col-10">
+                <div id="cardBody">
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            loadDeals();
+            function loadDeals(){
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/deals/check", true);
+                httpRequest.onreadystatechange = function (){
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+
+                        let dealsList = JSON.parse(httpRequest.responseText);
+
+                        let cardContent = "";
+
+                        for (let i = 0; i < dealsList.length; i++) {
+                            let deal = dealsList[i];
+                            let carName = deal.carDTO.carBrand.name;
+                            let dateOfPost = new Date(deal.currentDate);
+                            let formattedDate = dateOfPost.getDate() + ' ' + getMonthName(dateOfPost.getMonth()) + ' ' + dateOfPost.getFullYear();
+                            let carModel = deal.carDTO.model;
+                            let yearOfManufacturer = deal.carDTO.yearOfManufacturer;
+                            let color = deal.carDTO.color;
+                            let price = deal.carDTO.price;
+
+                            cardContent += '<div class="card mb-3">';
+                            cardContent += '<h5 class="card-header">' + carName + ' ' + carModel + '</h5>';
+                            cardContent += '<div class="card-body">';
+                            cardContent += '<h5 class="card-title">' + color + '</h5>';
+                            cardContent += '<p class="card-text">' + yearOfManufacturer + '</p>';
+                            cardContent += '<p class="card-text">Date of Post: ' + formattedDate + '</p>';
+                            cardContent += '<p class="card-text">' + price + '</p>';
+                            cardContent += '<a href="/car-details-check/' + deal.id + '" class="btn btn-primary">Details</a>';
+                            cardContent += '</div>';
+                            cardContent += '</div>';
+                        }
+                        document.getElementById("cardBody").innerHTML = cardContent;
+                    }
+                }
+                httpRequest.send();
+            }
+            function getMonthName(monthIndex) {
+                const months = [
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                return months[monthIndex];
+            }
+
+        </script>
+    </div>
+
+
+
+</html>

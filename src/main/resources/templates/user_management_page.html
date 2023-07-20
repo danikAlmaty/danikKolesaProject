@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div layout:fragment="content">
+        <div class="row">
+            <div class="container col-10">
+                <table class="table align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Permissions</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            loadUsers();
+            function loadUsers(){
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/users", true);
+                httpRequest.onreadystatechange = function (){
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+
+                        let userList = JSON.parse(httpRequest.responseText);
+
+                        let tableContent = "";
+
+                        for (let i = 0; i < userList.length; i++) {
+                            let user = userList[i];
+                            let userId = user.id;
+                            let userEmail = user.email;
+                            let userFullName = user.fullName;
+                            let userStatus = user.status;
+                            let permissionList = user.permissionsDTO;
+
+                            let rolesArray = permissionList.map(permission => permission.role);
+                            let roleString = rolesArray.join(' ');
+
+                            let userStatusText = "";
+                            if (userStatus){
+                                userStatusText = "Active";
+                            } else {
+                                userStatusText = "Blocked";
+                            }
+
+                            tableContent += '<tr>';
+                            tableContent += '<td>';
+                            tableContent += '<div class="d-flex align-items-center">';
+                            tableContent += '<div class="ms-3">';
+                            tableContent += '<p class="fw-bold mb-1">' + userFullName + '</p>';
+                            tableContent += '<p class="text-muted mb-0">' + userEmail + '</p>';
+                            tableContent += '</div>';
+                            tableContent += '</div>';
+                            tableContent += '</td>';
+
+                            tableContent += '<td>';
+                            tableContent += '<p class="fw-normal mb-1">' + roleString + '</p>';
+                            tableContent += '</td>';
+
+                            tableContent += '<td>';
+                            tableContent += '<span>' + userStatusText + '</span>';
+                            tableContent += '</td>';
+
+                            tableContent += '<td>';
+                            tableContent += '<a href="/user-details/' + userId + '" class="btn btn-primary">Edit</a>';
+                            tableContent += '</td>';
+
+                            tableContent += '</tr>';
+                        }
+                        document.getElementById("tableBody").innerHTML = tableContent;
+                    }
+                }
+                httpRequest.send();
+            }
+
+
+        </script>
+    </div>
+
+
+
+</html>
