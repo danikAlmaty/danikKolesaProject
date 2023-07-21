@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
             user.setStatus(true);
             Permission permission = new Permission();
             permission.setId(1L);
-            permission.setRole("ROLE_MODERATOR");
+            permission.setRole("ROLE_USER");
             List<Permission> basePermission = new ArrayList<>();
             basePermission.add(permission);
             user.setPermissons(basePermission);

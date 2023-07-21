@@ -1,7 +1,9 @@
+ALTER SEQUENCE permissions_id_seq RESTART WITH 4;
 INSERT INTO public.permissions (id, role) VALUES (1, 'ROLE_USER');
 INSERT INTO public.permissions (id, role) VALUES (2, 'ROLE_ADMIN');
 INSERT INTO public.permissions (id, role) VALUES (3, 'ROLE_MODERATOR');
 
+ALTER SEQUENCE users_id_seq RESTART WITH 8;
 INSERT INTO public.users (id, email, full_name, password, status) VALUES (2, 'danikmalodes@gmail.com', 'Daniyar Orazaly', '$2a$10$4SxVNtto7.yA.RkGwQXdxOov7uGLfihZl8pnKhzAQfXQ6ESckk4mO', true);
 INSERT INTO public.users (id, email, full_name, password, status) VALUES (3, 'abylai@gmail.com', 'Abylai Orazaly', '$2a$10$xCBVibF0PavMO2XtndxT4uwRZp32aYGQp4iSHhGG4MB6dXqn3b0LW', true);
 INSERT INTO public.users (id, email, full_name, password, status) VALUES (4, 'zhasik@gmail.com', 'Zhasulan Tleubai', '$2a$10$P0liScdE4mrdYXXr/NwBHuLTNZ/FXGC/brlIoX7DOn3hJ1WPqlvnu', true);
@@ -18,17 +20,20 @@ INSERT INTO public.users_permissons (user_id, permissons_id) VALUES (2, 3);
 INSERT INTO public.users_permissons (user_id, permissons_id) VALUES (3, 1);
 INSERT INTO public.users_permissons (user_id, permissons_id) VALUES (3, 2);
 
+ALTER SEQUENCE transmission_id_seq RESTART WITH 6;
 INSERT INTO public.transmission (id, type) VALUES (1, 'manual');
 INSERT INTO public.transmission (id, type) VALUES (2, 'automat');
 INSERT INTO public.transmission (id, type) VALUES (3, 'tiptronik');
 INSERT INTO public.transmission (id, type) VALUES (4, 'variator');
 INSERT INTO public.transmission (id, type) VALUES (5, 'robot');
 
+ALTER SEQUENCE drive_train_id_seq RESTART WITH 5;
 INSERT INTO public.drive_train (id, name) VALUES (1, 'AWD');
 INSERT INTO public.drive_train (id, name) VALUES (2, 'RWD');
 INSERT INTO public.drive_train (id, name) VALUES (3, '4WD');
 INSERT INTO public.drive_train (id, name) VALUES (4, 'FWD');
 
+ALTER SEQUENCE city_id_seq RESTART WITH 16;
 INSERT INTO public.city (id, name) VALUES (1, 'Almaty');
 INSERT INTO public.city (id, name) VALUES (2, 'Astana');
 INSERT INTO public.city (id, name) VALUES (3, 'Shymkent');
@@ -45,6 +50,7 @@ INSERT INTO public.city (id, name) VALUES (13, 'Kostanai');
 INSERT INTO public.city (id, name) VALUES (14, 'Oral');
 INSERT INTO public.city (id, name) VALUES (15, 'Kokshetau');
 
+ALTER SEQUENCE body_style_id_seq RESTART WITH 9;
 INSERT INTO public.body_style (id, style) VALUES (1, 'sedan');
 INSERT INTO public.body_style (id, style) VALUES (2, 'coupe');
 INSERT INTO public.body_style (id, style) VALUES (3, 'sport car');
@@ -54,6 +60,7 @@ INSERT INTO public.body_style (id, style) VALUES (6, 'SUV');
 INSERT INTO public.body_style (id, style) VALUES (7, 'minivan');
 INSERT INTO public.body_style (id, style) VALUES (8, 'pickup');
 
+ALTER SEQUENCE car_brand_id_seq RESTART WITH 28;
 INSERT INTO public.car_brand (id, country, name) VALUES (1, 'Germany', 'BMW');
 INSERT INTO public.car_brand (id, country, name) VALUES (2, 'Germany', 'Mercedes');
 INSERT INTO public.car_brand (id, country, name) VALUES (3, 'Germany', 'Audi');
@@ -82,7 +89,7 @@ INSERT INTO public.car_brand (id, country, name) VALUES (25, 'Japan', 'Lexus');
 INSERT INTO public.car_brand (id, country, name) VALUES (26, 'Russia', 'Lada');
 INSERT INTO public.car_brand (id, country, name) VALUES (27, 'England', 'Rolls-Royce');
 
-
+ALTER SEQUENCE car_id_seq RESTART WITH 12;
 INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (1, 'white', 'Продам авто в идеальном состоянии как новая, один хозяин, приобреталась у официалов, на гарантии, сертификат на 5 ТО. Самая полная комплектация High-Tech', true, 16000, 'Sonata', 17600000, 2.5, 2022, 1, 9, 1, 4, 2);
 INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (2, 'grey metallic', 'Движок и ходовка в порядке. Полное ТО. Машина ухоженная. Комплект зимней резины на оригинальных дисках. Перекупам не звонить! За 2-3млн не отдам. Минимальный торг.', true, 550000, 'E280', 4400000, 2.8, 1998, 1, 2, 1, 2, 2);
 INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (3, 'blue metallic', 'Только продажа обмена нет. Торг. Срочно. Вложений не требует. Машина в Макинске.', true, 150000, 'Kalina', 2850000, 1.6, 2012, 4, 26, 15, 4, 1);
@@ -103,9 +110,10 @@ INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price
 INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (8, 'black', 'литые диски, тонировка, корректор фар, кожа, дерево, алькантара, шторки, аудиосистема, сабвуфер, климат-контроль, ГУР, ABS, SRS, зимний режим, сигнализация, автозапуск, полный электропакет, центрозамок, круиз-контроль, подогрев сидений, парктроники, налог уплачен, техосмотр пройден, вложений не требует', true, 750000, 'S500', 3800000, 5, 1996, 1, 2, 1, 2, 2);
 INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (9, 'white', 'Срочно! Цена Окончательно', true, 60000, 'Accent', 7500000, 1.6, 2019, 1, 9, 9, 4, 2);
 INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (10, 'black metallic', 'Без пробега по СНГ, без слов и без вариантов, только эмоции', true, 138000, 'Alphard', 12500000, 3.5, 2009, 7, 6, 2, 4, 2);
-INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (11, 'black', e'Состояние отличное. Самая полная комплектация. Объём 3.0 полный привод, мотор очень надежный в линейке БМВ, машина вообще не прихотливая. Намного надежнее, комфортнее при должном уходе за авто в сравнении с предыдущими поколениями. Ходовка, мотор, коробка выполняют свою работу на все 1000%, никаких нареканий нет вообще, не дымит, не дрожит.
+INSERT INTO public.car (id, color, description, is_kazakh, mileage, model, price, volume, year_of_manufacturer, body_style_id, car_brand_id, city_id, drive_train_id, type_of_transmission_id) VALUES (11, 'black', 'Состояние отличное. Самая полная комплектация. Объём 3.0 полный привод, мотор очень надежный в линейке БМВ, машина вообще не прихотливая. Намного надежнее, комфортнее при должном уходе за авто в сравнении с предыдущими поколениями. Ходовка, мотор, коробка выполняют свою работу на все 1000%, никаких нареканий нет вообще, не дымит, не дрожит.
 Вся морда до половины крыши в пленке, задний бампер тоже в пленке. Капитанские сидения, очень комфортен для водителя и пассажиров сзади. По машине были заменены абсолютно все жидкости вплоть до тормозных жидкостей, был заменен задний пневма баллон на оригинальный. Варианты на авто интересует. Желательно BMW X5, X6 или 540, 530 G30 или G63 2013-2016. Больше интересует варианты авто с вашей доплатой', true, 45000, '740', 29000000, 3, 2016, 1, 1, 3, 1, 1);
 
+ALTER SEQUENCE deal_id_seq RESTART WITH 12;
 INSERT INTO public.deal (id, date_of_post, is_active, phone_number, author_id, car_id) VALUES (11, '2023-07-20 12:39:47.024040', false, '+7 777 999 9297', 4, 11);
 INSERT INTO public.deal (id, date_of_post, is_active, phone_number, author_id, car_id) VALUES (1, '2023-07-20 12:17:22.914596', true, '+7 777 277 7714', 7, 1);
 INSERT INTO public.deal (id, date_of_post, is_active, phone_number, author_id, car_id) VALUES (2, '2023-07-20 12:19:44.634368', true, '+7 777 244 0770', 7, 2);
@@ -118,17 +126,18 @@ INSERT INTO public.deal (id, date_of_post, is_active, phone_number, author_id, c
 INSERT INTO public.deal (id, date_of_post, is_active, phone_number, author_id, car_id) VALUES (9, '2023-07-20 12:35:05.285588', true, '+7 707 660 7066', 5, 9);
 INSERT INTO public.deal (id, date_of_post, is_active, phone_number, author_id, car_id) VALUES (10, '2023-07-20 12:37:42.539660', true, '+7 702 803 2000', 4, 10);
 
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (1, 'лучше взять камри', '2023-07-20 12:43:44.393859', 1, 7);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (2, 'кузов ширимеген ба?', '2023-07-20 12:44:02.492264', 2, 7);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (3, 'документ бари дурыс па?', '2023-07-20 12:44:23.649804', 3, 7);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (4, '6500 000 алып кетем ба?', '2023-07-20 12:45:18.637386', 4, 6);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (5, 'обмен на Х6 бар ма?', '2023-07-20 12:46:15.403644', 8, 6);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (6, 'кымбат емес па?!!!!!', '2023-07-20 12:46:36.055414', 10, 6);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (7, 'Обмен на земельный участок', '2023-07-20 12:47:31.804673', 9, 5);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (8, '7200 000 бар нал', '2023-07-20 12:47:51.559540', 8, 5);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (9, 'Обмен на Мерседес', '2023-07-20 12:48:12.266732', 7, 5);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (10, e'коробка не пинается?
+ALTER SEQUENCE comment_id_seq RESTART WITH 13;
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (1, 'лучше взять камри', '2023-07-20 12:43:44.393859', 1, 7);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (2, 'кузов ширимеген ба?', '2023-07-20 12:44:02.492264', 2, 7);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (3, 'документ бари дурыс па?', '2023-07-20 12:44:23.649804', 3, 7);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (4, '6500 000 алып кетем ба?', '2023-07-20 12:45:18.637386', 4, 6);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (5, 'обмен на Х6 бар ма?', '2023-07-20 12:46:15.403644', 8, 6);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (6, 'кымбат емес па?!!!!!', '2023-07-20 12:46:36.055414', 10, 6);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (7, 'Обмен на земельный участок', '2023-07-20 12:47:31.804673', 9, 5);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (8, '7200 000 бар нал', '2023-07-20 12:47:51.559540', 8, 5);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (9, 'Обмен на Мерседес', '2023-07-20 12:48:12.266732', 7, 5);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (10, e'коробка не пинается?
 ', '2023-07-20 12:48:30.315092', 6, 5);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (11, 'У меня такая же во владении, машина топ, одни эмоции', '2023-07-20 12:49:47.147395', 9, 4);
-INSERT INTO public.comment (id, content, createdat, deal_id, user_id) VALUES (12, 'Обмен на квартиру 1-х в городе Тараз', '2023-07-20 12:50:25.085196', 6, 4);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (11, 'У меня такая же во владении, машина топ, одни эмоции', '2023-07-20 12:49:47.147395', 9, 4);
+INSERT INTO public.comment (id, content, created_at, deal_id, user_id) VALUES (12, 'Обмен на квартиру 1-х в городе Тараз', '2023-07-20 12:50:25.085196', 6, 4);
 
